@@ -173,6 +173,83 @@ public class DummiesImplTest {
 
   }
 
+
+  interface PrimitiveByte {
+    byte getValue();
+  }
+
+  @Value
+  public static class PrimitiveByteValue implements PrimitiveByte {
+    @DummyValues(byteMin = 1)
+    private byte value;
+  }
+
+  @Data
+  public static class PrimitiveBytePojo implements PrimitiveByte {
+    @DummyValues(byteMin = 1)
+    private byte value;
+  }
+
+  private void primitiveByteAssertions(final PrimitiveByte obj) {
+    Assert.assertNotNull(obj);
+    Assert.assertTrue(obj.getValue() + " should be > 0", obj.getValue() > 0);
+  }
+
+  @Test
+  public void checkCreationOfValueWithPrimitiveByteProperty() {
+    for (int i = 0; i < 20; i += 1) {
+      val obj = Dummies.get().create(PrimitiveByteValue.class);
+      primitiveByteAssertions(obj);
+    }
+  }
+
+  @Test
+  public void checkCreationOfPojoWithPrimitiveByteProperty() {
+    for (int i = 0; i < 20; i += 1) {
+      val obj = Dummies.get().create(PrimitiveBytePojo.class);
+      primitiveByteAssertions(obj);
+    }
+  }
+
+
+  interface PrimitiveShort {
+    short getValue();
+  }
+
+  @Value
+  public static class PrimitiveShortValue implements PrimitiveShort {
+    @DummyValues(shortMin = 1)
+    private short value;
+  }
+
+  @Data
+  public static class PrimitiveShortPojo implements PrimitiveShort {
+    @DummyValues(shortMin = 1)
+    private short value;
+  }
+
+  private void primitiveShortAssertions(final PrimitiveShort obj) {
+    Assert.assertNotNull(obj);
+    Assert.assertTrue(obj.getValue() + " should be > 0", obj.getValue() > 0);
+  }
+
+  @Test
+  public void checkCreationOfValueWithPrimitiveShortProperty() {
+    for (int i = 0; i < 20; i += 1) {
+      val obj = Dummies.get().create(PrimitiveShortValue.class);
+      primitiveShortAssertions(obj);
+    }
+  }
+
+  @Test
+  public void checkCreationOfPojoWithPrimitiveShortProperty() {
+    for (int i = 0; i < 20; i += 1) {
+      val obj = Dummies.get().create(PrimitiveShortPojo.class);
+      primitiveShortAssertions(obj);
+    }
+  }
+
+
   interface PrimitiveInt {
     int getValue();
   }
@@ -207,6 +284,44 @@ public class DummiesImplTest {
     for (int i = 0; i < 20; i += 1) {
       val obj = Dummies.get().create(PrimitiveIntPojo.class);
       primitiveIntAssertions(obj);
+    }
+  }
+
+
+  interface PrimitiveLong {
+    long getValue();
+  }
+
+  @Value
+  public static class PrimitiveLongValue implements PrimitiveLong {
+    @DummyValues(longMin = 1)
+    private long value;
+  }
+
+  @Data
+  public static class PrimitiveLongPojo implements PrimitiveLong {
+    @DummyValues(longMin = 1)
+    private long value;
+  }
+
+  private void primitiveLongAssertions(final PrimitiveLong obj) {
+    Assert.assertNotNull(obj);
+    Assert.assertTrue(obj.getValue() + " should be > 0", obj.getValue() > 0);
+  }
+
+  @Test
+  public void checkCreationOfValueWithPrimitiveLongProperty() {
+    for (int i = 0; i < 20; i += 1) {
+      val obj = Dummies.get().create(PrimitiveLongValue.class);
+      primitiveLongAssertions(obj);
+    }
+  }
+
+  @Test
+  public void checkCreationOfPojoWithPrimitiveLongProperty() {
+    for (int i = 0; i < 20; i += 1) {
+      val obj = Dummies.get().create(PrimitiveLongPojo.class);
+      primitiveLongAssertions(obj);
     }
   }
 
