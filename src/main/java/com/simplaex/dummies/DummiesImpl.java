@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static com.simplaex.dummies.util.UtilityBelt.getInjectableConstructor;
 
-public final class DummiesImpl implements Dummies {
+final class DummiesImpl implements Dummies {
 
   private final Supplier<Random> randomSupplier;
 
@@ -179,7 +179,7 @@ public final class DummiesImpl implements Dummies {
     }
   }
 
-  private Generator<?> createRangeGeneratorFor(
+  private Generator<?> createGeneratorForRange(
       final DummyValues dummyValues,
       final TypeInfo typeInfo
   ) {
@@ -265,7 +265,11 @@ public final class DummiesImpl implements Dummies {
         final long max = minAndMax.getMax();
         final long longMax = max - min;
 
-        return () -> (int) (min + (getRandom().nextLong() % longMax));
+        return () -> {
+          final long nextLong = Math.abs(getRandom().nextLong());
+          final long nextInt = nextLong % longMax;
+          return (int) nextInt;
+        };
       }
 
     } else if (typeInfo.isLong()) {
@@ -399,6 +403,11 @@ public final class DummiesImpl implements Dummies {
     };
   }
 
+  private <A> Generator<A> createGeneratorForEnum(final TypeInfo<A> typeInfo) {
+    final A[] enumConstants = typeInfo.getType().getEnumConstants();
+    return () -> enumConstants[getRandom().nextInt(enumConstants.length)];
+  }
+
   private Generator<?> createGeneratorFor(
       final DummyAnnotations dummyAnnotations,
       final TypeInfo<?> typeInfo
@@ -423,14 +432,13 @@ public final class DummiesImpl implements Dummies {
           ) {
         return createGeneratorForMap(dummyAnnotations, typeInfo);
       } else if (typeInfo.isEnum()) {
-        final Object[] enumConstants = typeInfo.getType().getEnumConstants();
-        return () -> enumConstants[getRandom().nextInt(enumConstants.length)];
+        return createGeneratorForEnum(typeInfo);
       }
       final List<?> valueList = extractValueList(dummyValues, typeInfo);
       if (!valueList.isEmpty()) {
         return () -> valueList.get(randomSupplier.get().nextInt(valueList.size()));
       }
-      final Generator<?> rangeGenerator = createRangeGeneratorFor(dummyValues, typeInfo);
+      final Generator<?> rangeGenerator = createGeneratorForRange(dummyValues, typeInfo);
       if (rangeGenerator != null) {
         return rangeGenerator;
       }
@@ -505,6 +513,9 @@ public final class DummiesImpl implements Dummies {
       final TypeInfo<?> ft = TypeInfo.get(f.getType(), f.getGenericType());
 
       if (!pt.equals(ft)) {
+        continue;
+      }
+      if (f.isSynthetic()) {
         continue;
       }
 
@@ -599,6 +610,8 @@ public final class DummiesImpl implements Dummies {
     final TypeInfo<A> targetTypeInfo = TypeInfo.get(clazz);
     if (targetTypeInfo.isArray()) {
       return createGeneratorForArray(DummyAnnotations.getDefault(), targetTypeInfo);
+    } else if (targetTypeInfo.isEnum()) {
+      return createGeneratorForEnum(targetTypeInfo);
     }
     final Constructor<A> constructor = getInjectableConstructor(clazz);
     if (constructor == null) {
