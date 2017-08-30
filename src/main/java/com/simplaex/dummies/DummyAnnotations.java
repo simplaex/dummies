@@ -4,7 +4,7 @@ import com.simplaex.dummies.annotation.DummyValues;
 import lombok.Value;
 
 @Value
-class DummyAnnotations {
+final class DummyAnnotations {
 
   DummyValues defaultValues;
 

@@ -1,7 +1,6 @@
 package com.simplaex.dummies;
 
 import java.util.Random;
-import java.util.function.Consumer;
 
 public interface Dummies {
 
@@ -43,13 +42,4 @@ public interface Dummies {
     Dummies build();
 
   }
-}
-
-class DummiesSingleton {
-
-  static Consumer<Exception> noOpExceptionHandler = exc -> {
-  };
-
-  static final Dummies INSTANCE = Dummies.builder().build();
-
 }

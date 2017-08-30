@@ -5,7 +5,7 @@
   <groupId>com.simplaex</groupId>
   <artifactId>dummies</artifactId>
 
-  <version>0.9</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -18,7 +18,7 @@
     <connection>scm:git:ssh://git@github.com:simplaex/dummies.git</connection>
     <developerConnection>scm:git:ssh://git@github.com:simplaex/dummies.git</developerConnection>
     <url>https://github.com/simplaex/dummies</url>
-    <tag>v0.9</tag>
+    <tag>v1.0.0</tag>
   </scm>
 
   <licenses>

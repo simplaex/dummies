@@ -4,10 +4,9 @@ import lombok.Value;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Value
-class ClassInfo implements Iterable<PropertyInfo<?>> {
+final class ClassInfo implements Iterable<PropertyInfo<?>> {
 
   private final Class<?> type;
 

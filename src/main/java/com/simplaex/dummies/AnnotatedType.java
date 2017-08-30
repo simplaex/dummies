@@ -3,12 +3,11 @@ package com.simplaex.dummies;
 import lombok.Value;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
 
 @Value
-class AnnotatedType {
+final class AnnotatedType {
 
   private String name;
 
