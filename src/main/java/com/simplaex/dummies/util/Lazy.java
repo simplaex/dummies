@@ -1,8 +1,8 @@
-package com.simplaex.dummies;
+package com.simplaex.dummies.util;
 
 import java.util.function.Supplier;
 
-final class Lazy<T> implements Supplier<T> {
+final public class Lazy<T> implements Supplier<T> {
 
   private Supplier<T> supplier;
   private T thing = null;

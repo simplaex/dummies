@@ -1,4 +1,4 @@
-package com.simplaex.dummies;
+package com.simplaex.dummies.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
@@ -11,13 +11,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @UtilityClass
-class DummiesUtil {
+public class UtilityBelt {
 
-  static <A> Lazy<A> lazy(final Supplier<A> supplier) {
+  public static <A> Lazy<A> lazy(final Supplier<A> supplier) {
     return new Lazy<>(supplier);
   }
 
-  static <A> Constructor<A> getInjectableConstructor(final Class<A> clazz) {
+  public static <A> Constructor<A> getInjectableConstructor(final Class<A> clazz) {
 
     @SuppressWarnings("unchecked") List<Constructor<A>> constructors =
         Arrays.asList((Constructor<A>[]) clazz.getConstructors());
@@ -44,7 +44,7 @@ class DummiesUtil {
     return constructors.get(0);
   }
 
-  static <A> Supplier<A> constructorToSupplier(final Constructor<A> constructor) {
+  public static <A> Supplier<A> constructorToSupplier(final Constructor<A> constructor) {
     return () -> {
       try {
         return constructor.newInstance();
@@ -53,4 +53,13 @@ class DummiesUtil {
       }
     };
   }
+
+  public static <K, V> Entry<K, V> entry(final K key, final V value) {
+    return new Entry<>(key, value);
+  }
+
+  public static <T> Cons<T> cons(final T value, final Cons<T> cons) {
+    return new Cons<>(value, cons);
+  }
+
 }

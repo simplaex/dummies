@@ -1,5 +1,6 @@
 package com.simplaex.dummies;
 
+import com.simplaex.dummies.util.Lazy;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,8 +15,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.simplaex.dummies.DummiesUtil.constructorToSupplier;
-import static com.simplaex.dummies.DummiesUtil.lazy;
+import static com.simplaex.dummies.util.UtilityBelt.constructorToSupplier;
+import static com.simplaex.dummies.util.UtilityBelt.lazy;
 
 @Value
 @EqualsAndHashCode(of = {"type", "genericType"})

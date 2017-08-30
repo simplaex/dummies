@@ -5,7 +5,7 @@ import lombok.Value;
 import java.lang.reflect.Method;
 
 @Value
-class PropertyInfo<T> {
+final class PropertyInfo<T> {
 
   private AnnotatedType annotatedType;
 

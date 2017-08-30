@@ -3,7 +3,7 @@ package com.simplaex.dummies;
 import lombok.Value;
 
 @Value
-class FieldInfo<T> {
+final class FieldInfo<T> {
 
   private AnnotatedType annotatedType;
 

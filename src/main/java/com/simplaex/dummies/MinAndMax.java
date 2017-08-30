@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Value
-class MinAndMax<T> {
+final class MinAndMax<T> {
 
   private T min;
 

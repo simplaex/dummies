@@ -1,6 +1,8 @@
 package com.simplaex.dummies;
 
-public class InstantiationException extends FastException {
+import com.simplaex.dummies.util.FastRuntimeException;
+
+public class InstantiationException extends FastRuntimeException {
 
   InstantiationException(final String message) {
     super(message);
