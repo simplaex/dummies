@@ -1,9 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.simplaex</groupId>
   <artifactId>dummies</artifactId>
+
+  <name>dummies</name>
+  <description>Create Java/Scala mock objects with real content</description>
+  <url>https://github.com/simplaex/dummies</url>
 
   <version>1.0.0</version>
   <packaging>jar</packaging>
@@ -16,7 +22,8 @@
 
   <scm>
     <connection>scm:git:ssh://git@github.com:simplaex/dummies.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com:simplaex/dummies.git</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com:simplaex/dummies.git
+    </developerConnection>
     <url>https://github.com/simplaex/dummies</url>
     <tag>v1.0.0</tag>
   </scm>
@@ -33,12 +40,12 @@
     <url>http://simplaex.com/</url>
   </organization>
 
-  <contributors>
-    <contributor>
+  <developers>
+    <developer>
       <name>Julian Fleischer</name>
       <email>julian@simplaex.com</email>
-    </contributor>
-  </contributors>
+    </developer>
+  </developers>
 
   <distributionManagement>
     <snapshotRepository>
