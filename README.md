@@ -91,3 +91,25 @@
       }
     
     }
+
+### Scala
+
+    object ScalaExample {
+    
+      def main(args: Array[String]): Unit = {
+      
+        val record = Dummies.get().create(classOf[Record])
+        println(record)
+        // -> Record(a2a64f26-ed99-4265-8b57-f668099339c7,+127329170-07-19T19:33:44.946Z,+68490793-08-27T22:13:40.674Z,CZ)
+
+      }
+    
+      final case class Record(
+        id: UUID,
+        createdAt: Instant,
+        updatedAt: Instant,
+        @(DummyValues @field)(generator = classOf[CountryCodeGenerator])
+        countryOfOrigin: String
+      )
+
+    }
