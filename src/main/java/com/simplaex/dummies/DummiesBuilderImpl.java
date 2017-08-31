@@ -84,15 +84,11 @@ final class DummiesBuilderImpl implements Dummies.Builder {
         randomSupplier,
         exceptionHandler
     );
-    if (generators != null) {
-      for (final Map.Entry<Class<?>, Generator<?>> entry : generators) {
-        instance.addGenerator(entry.getKey(), entry.getValue());
-      }
+    for (final Map.Entry<Class<?>, Generator<?>> entry : generators) {
+      instance.addGenerator(entry.getKey(), entry.getValue());
     }
-    if (generatorTypes != null) {
-      for (final Map.Entry<Class<?>, Class<? extends Generator<?>>> entry : generatorTypes) {
-        instance.addGenerator(entry.getKey(), entry.getValue());
-      }
+    for (final Map.Entry<Class<?>, Class<? extends Generator<?>>> entry : generatorTypes) {
+      instance.addGenerator(entry.getKey(), entry.getValue());
     }
     return instance;
   }
