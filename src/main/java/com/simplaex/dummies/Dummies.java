@@ -26,25 +26,25 @@ public interface Dummies {
 
   /**
    * Tries to instantiates a class of a given type from a String representation.
-   *
+   * <p>
    * If the class has a single parameter constructor that takes a string, then
    * that is used to create the class.
-   *
+   * <p>
    * Otherwise if the class has a public static method that takes a single String
    * and returns the requested type then that is used to create the instance.
-   *
+   * <p>
    * Otherwise if the class has a public static method that takes a single CharSequence
    * and returns the requested type then that is used to create the instance.
-   *
+   * <p>
    * Otherwise if the class has a public static method that takes a single byte array
    * and returns the requested type then the given string is turned into a byte array
    * using UTF-8 as charset and that method is used to create the instance.
-   *
+   * <p>
    * Otherwise null is returned.
    *
-   * @param clazz The class instance of the type T.
+   * @param clazz       The class instance of the type T.
    * @param stringValue The string value which is used to create the class.
-   * @param <T> The type T.
+   * @param <T>         The type T.
    * @return An instance of type T, or null.
    * @since 1.0.0
    */
@@ -53,14 +53,42 @@ public interface Dummies {
   Random getRandom();
 
 
+  /**
+   * Creates a new Dummies instance that uses a random generator
+   * initialized with the given seed.
+   *
+   * Useful for repeatability.
+   *
+   * @param seed The seed to initialize the underlying random generator with.
+   * @return A new instance of Dummies.
+   * @since 1.0.0
+   */
   static Dummies forSeed(final long seed) {
     return builder().withSeed(seed).build();
   }
 
+  /**
+   * Creates a new Dummies instance that uses a {@link java.security.SecureRandom}
+   * to generate random data.
+   *
+   * @return An new instance of Dummies.
+   * @since 1.0.0
+   */
   static Dummies secure() {
     return builder().secure().build();
   }
 
+  /**
+   * Returns the default Dummies instance that uses a {@link java.util.concurrent.ThreadLocalRandom}
+   * to generate random data.
+   * <p>
+   * This method returns the same Dummies instance every time.
+   * Use it, except you need some fancy features such as your own
+   * {@link Generator}s or a deterministic Dummies instance.
+   *
+   * @return An instance of Dummies.
+   * @since 1.0.0
+   */
   static Dummies get() {
     return DummiesSingleton.INSTANCE;
   }
