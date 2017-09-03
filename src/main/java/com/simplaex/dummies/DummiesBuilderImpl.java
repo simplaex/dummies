@@ -69,6 +69,11 @@ final class DummiesBuilderImpl implements Dummies.Builder {
   }
 
   @Override
+  public Dummies.Builder withExceptionHandler(Consumer<Exception> exceptionHandler) {
+    return new DummiesBuilderImpl(seed, secure, exceptionHandler, generators, generatorTypes);
+  }
+
+  @Override
   public Dummies build() {
     final Supplier<Random> randomSupplier;
     if (secure) {

@@ -4,6 +4,7 @@ import com.simplaex.dummies.annotation.DummySpec;
 import com.simplaex.dummies.annotation.DummyTarget;
 import com.simplaex.dummies.annotation.DummyValues;
 import com.simplaex.dummies.generators.*;
+import com.simplaex.dummies.util.ThreadLocalInteger;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -109,7 +110,6 @@ final class DummiesImpl implements Dummies {
       throw new InstantiationException(exc);
     }
   }
-
 
   private List<?> extractValueList(final DummyValues dummyValues, final TypeInfo typeInfo) {
 
@@ -656,25 +656,47 @@ final class DummiesImpl implements Dummies {
     return (Supplier<T>) classFactories.computeIfAbsent(clazz, this::createFactoryFor);
   }
 
+  private final ThreadLocalInteger depth = new ThreadLocalInteger();
+
+  private final int maxDepth = 10;
+
   @Override
   public <T> T fill(final T obj) {
-    final ClassInfo classInfo = getClassInfoFor(obj.getClass());
-    for (final PropertyInfo p : classInfo) {
-      try {
-        final Object value = p.getGenerator().get();
-        if (value != null) {
-          p.getWriteMethod().invoke(obj, value);
-        }
-      } catch (final Exception exc) {
-        handleException(exc);
-      }
+    final int currentDepth = depth.get();
+    if (currentDepth >= maxDepth) {
+      return obj;
     }
-    return obj;
+    depth.set(currentDepth + 1);
+    try {
+      final ClassInfo classInfo = getClassInfoFor(obj.getClass());
+      for (final PropertyInfo p : classInfo) {
+        try {
+          final Object value = p.getGenerator().get();
+          if (value != null) {
+            p.getWriteMethod().invoke(obj, value);
+          }
+        } catch (final Exception exc) {
+          handleException(exc);
+        }
+      }
+      return obj;
+    } finally {
+      depth.set(currentDepth);
+    }
   }
 
   @Override
   public <T> T create(final Class<T> clazz) {
-    return fill(getFactoryFor(clazz).get());
+    final int currentDepth = depth.get();
+    if (currentDepth >= maxDepth) {
+      return null;
+    }
+    depth.set(currentDepth + 1);
+    try {
+      return fill(getFactoryFor(clazz).get());
+    } finally {
+      depth.set(currentDepth);
+    }
   }
 
   @Override

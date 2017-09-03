@@ -1,6 +1,7 @@
 package com.simplaex.dummies;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
 public interface Dummies {
 
@@ -50,13 +51,26 @@ public interface Dummies {
    */
   <T> T fromString(final Class<T> clazz, final String stringValue);
 
+  /**
+   * Returns the random generator used by this instance of Dummies.
+   * <p>
+   * This method is important when writing a custom {@link Generator}.
+   * Generators are supposed to use the random generator provided by Dummies,
+   * making sure to generate random data from the same source which is
+   * important for example for using Dummies with a predefined seed.
+   * <p>
+   * See {@link #forSeed(long)}
+   *
+   * @return The random generator used by this instance of Dummies.
+   * @since 1.0.0
+   */
   Random getRandom();
 
 
   /**
    * Creates a new Dummies instance that uses a random generator
    * initialized with the given seed.
-   *
+   * <p>
    * Useful for repeatability.
    *
    * @param seed The seed to initialize the underlying random generator with.
@@ -93,10 +107,24 @@ public interface Dummies {
     return DummiesSingleton.INSTANCE;
   }
 
+  /**
+   * Create a builder for creating a customized instance of Dummies.
+   *
+   * @return A new builder.
+   * @since 1.0.0
+   */
   static Builder builder() {
     return new DummiesBuilderImpl();
   }
 
+  /**
+   * A builder for creating customized instances of Dummies.
+   * <p>
+   * Builders are immutable and thread-safe and therefore reusable.
+   * Every method on a builder creates a new builder.
+   *
+   * @since 1.0.0
+   */
   interface Builder {
 
     Builder secure();
@@ -106,6 +134,15 @@ public interface Dummies {
     <T> Builder withGenerator(final Class<T> clazz, final Generator<T> generator);
 
     <T, G extends Generator<T>> Builder withGenerator(final Class<T> clazz, final Class<G> generator);
+
+    /**
+     * @param exceptionHandler A consumer function that will be invoked by
+     *                         the Dummies instance created by the new builder
+     *                         whenever an exception happens.
+     * @return A new builder that will use the given exception handler.
+     * @since 1.1.0
+     */
+    Builder withExceptionHandler(final Consumer<Exception> exceptionHandler);
 
     Dummies build();
 

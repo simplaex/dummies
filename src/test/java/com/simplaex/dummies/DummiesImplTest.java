@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.UUID;
 
 @SuppressWarnings("WeakerAccess")
@@ -325,5 +326,36 @@ public class DummiesImplTest {
     }
   }
 
+  @Value
+  public static class Recursive {
 
+    private int head;
+
+    private Recursive tail;
+
+    public int length() {
+      if (tail == null) {
+        return 1;
+      }
+      return 1 + tail.length();
+    }
+
+    public int[] toArray() {
+      final int[] result = new int[length()];
+      Recursive current = this;
+      int i = 0;
+      while (current != null) {
+        result[i++] = current.head;
+        current = current.tail;
+      }
+      return result;
+    }
+  }
+
+  @Test
+  public void checkRecursionMaxDepth() {
+    val recursive = Dummies.get().create(Recursive.class);
+    System.out.println(recursive.length());
+    System.out.println(Arrays.toString(recursive.toArray()));
+  }
 }
