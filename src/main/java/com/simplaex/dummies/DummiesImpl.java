@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
@@ -34,7 +33,7 @@ final class DummiesImpl implements Dummies {
 
   private final Supplier<Random> randomSupplier;
 
-  private final Consumer<Exception> exceptionHandler;
+  private final DummiesConfiguration configuration;
 
   private final Map<Class<?>, ClassInfo> classInfo =
       Collections.synchronizedMap(new HashMap<>());
@@ -46,10 +45,10 @@ final class DummiesImpl implements Dummies {
 
   DummiesImpl(
       final Supplier<Random> randomSupplier,
-      final Consumer<Exception> exceptionHandler
+      final DummiesConfiguration configuration
   ) {
     this.randomSupplier = randomSupplier;
-    this.exceptionHandler = exceptionHandler;
+    this.configuration = configuration;
 
     addGenerator(UUID.class, UUIDGenerator.class);
     addGenerator(Character.class, () -> (char) getRandom().nextInt(Character.MAX_VALUE));
@@ -75,7 +74,7 @@ final class DummiesImpl implements Dummies {
 
   private void handleException(final Exception exc) {
     try {
-      exceptionHandler.accept(exc);
+      configuration.getExceptionHandler().accept(exc);
     } catch (final Exception ignore) {
     }
   }
@@ -658,12 +657,10 @@ final class DummiesImpl implements Dummies {
 
   private final ThreadLocalInteger depth = new ThreadLocalInteger();
 
-  private final int maxDepth = 10;
-
   @Override
   public <T> T fill(final T obj) {
     final int currentDepth = depth.get();
-    if (currentDepth >= maxDepth) {
+    if (currentDepth >= configuration.getRecursionMaxDepth()) {
       return obj;
     }
     depth.set(currentDepth + 1);
@@ -688,15 +685,17 @@ final class DummiesImpl implements Dummies {
   @Override
   public <T> T create(final Class<T> clazz) {
     final int currentDepth = depth.get();
-    if (currentDepth >= maxDepth) {
+    if (currentDepth >= configuration.getRecursionMaxDepth()) {
       return null;
     }
     depth.set(currentDepth + 1);
+    final T newInstance;
     try {
-      return fill(getFactoryFor(clazz).get());
+      newInstance = getFactoryFor(clazz).get();
     } finally {
       depth.set(currentDepth);
     }
+    return fill(newInstance);
   }
 
   @Override

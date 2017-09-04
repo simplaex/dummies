@@ -18,7 +18,7 @@ final class DummiesBuilderImpl implements Dummies.Builder {
 
   private final boolean secure;
 
-  private final Consumer<Exception> exceptionHandler;
+  private final DummiesConfiguration configuration;
 
   private final Cons<Map.Entry<Class<?>, Generator<?>>> generators;
 
@@ -28,7 +28,7 @@ final class DummiesBuilderImpl implements Dummies.Builder {
     this(
         null,
         false,
-        DummiesSingleton.noOpExceptionHandler,
+        DummiesConfiguration.defaultConfiguration,
         Cons.empty(),
         Cons.empty()
     );
@@ -37,40 +37,45 @@ final class DummiesBuilderImpl implements Dummies.Builder {
   private DummiesBuilderImpl(
       final Long seed,
       final boolean secure,
-      final Consumer<Exception> exceptionHandler,
+      final DummiesConfiguration configuration,
       final Cons<Map.Entry<Class<?>, Generator<?>>> generators,
       final Cons<Map.Entry<Class<?>, Class<? extends Generator<?>>>> generatorTypes
   ) {
     this.seed = seed;
     this.secure = secure;
-    this.exceptionHandler = exceptionHandler;
+    this.configuration = configuration;
     this.generators = generators;
     this.generatorTypes = generatorTypes;
   }
 
   @Override
   public DummiesBuilderImpl secure() {
-    return new DummiesBuilderImpl(seed, true, exceptionHandler, generators, generatorTypes);
+    return new DummiesBuilderImpl(seed, true, configuration, generators, generatorTypes);
   }
 
   @Override
   public DummiesBuilderImpl withSeed(final long seed) {
-    return new DummiesBuilderImpl(seed, secure, exceptionHandler, generators, generatorTypes);
+    return new DummiesBuilderImpl(seed, secure, configuration, generators, generatorTypes);
   }
 
   @Override
   public <T> DummiesBuilderImpl withGenerator(final Class<T> clazz, final Generator<T> generator) {
-    return new DummiesBuilderImpl(seed, secure, exceptionHandler, cons(entry(clazz, generator), generators), generatorTypes);
+    return new DummiesBuilderImpl(seed, secure, configuration, cons(entry(clazz, generator), generators), generatorTypes);
   }
 
   @Override
   public <T, G extends Generator<T>> DummiesBuilderImpl withGenerator(final Class<T> clazz, final Class<G> generatorType) {
-    return new DummiesBuilderImpl(seed, secure, exceptionHandler, generators, cons(entry(clazz, generatorType), generatorTypes));
+    return new DummiesBuilderImpl(seed, secure, configuration, generators, cons(entry(clazz, generatorType), generatorTypes));
   }
 
   @Override
   public Dummies.Builder withExceptionHandler(Consumer<Exception> exceptionHandler) {
-    return new DummiesBuilderImpl(seed, secure, exceptionHandler, generators, generatorTypes);
+    return new DummiesBuilderImpl(seed, secure, configuration.withExceptionHandler(exceptionHandler), generators, generatorTypes);
+  }
+
+  @Override
+  public Dummies.Builder withRecursionMaxDepth(final int maxDepth) {
+    return new DummiesBuilderImpl(seed, secure, configuration.withRecursionMaxDepth(maxDepth), generators, generatorTypes);
   }
 
   @Override
@@ -87,7 +92,7 @@ final class DummiesBuilderImpl implements Dummies.Builder {
     }
     final DummiesImpl instance = new DummiesImpl(
         randomSupplier,
-        exceptionHandler
+        configuration
     );
     for (final Map.Entry<Class<?>, Generator<?>> entry : generators) {
       instance.addGenerator(entry.getKey(), entry.getValue());

@@ -136,6 +136,9 @@ public interface Dummies {
     <T, G extends Generator<T>> Builder withGenerator(final Class<T> clazz, final Class<G> generator);
 
     /**
+     * Creates a Builder which will build Dummies with the given
+     * exception handler.
+     *
      * @param exceptionHandler A consumer function that will be invoked by
      *                         the Dummies instance created by the new builder
      *                         whenever an exception happens.
@@ -143,6 +146,17 @@ public interface Dummies {
      * @since 1.1.0
      */
     Builder withExceptionHandler(final Consumer<Exception> exceptionHandler);
+
+    /**
+     * Creates a Builder which will build Dummies with the given maximum
+     * recursion depth.
+     *
+     * @param maxDepth The maximum recursion depth dummies will perform when
+     *                 creating/filling instances.
+     * @return A new builder that will use the given recursion max depth.
+     * @since 1.1.0
+     */
+    Dummies.Builder withRecursionMaxDepth(final int maxDepth);
 
     Dummies build();
 
